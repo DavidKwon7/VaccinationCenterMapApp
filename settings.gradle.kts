@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "VaccinationCenterMapApp"
 include(":app")
+include(":data")
+include(":domain")
+include(":common")
+include(":presentation")

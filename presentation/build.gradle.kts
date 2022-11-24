@@ -10,26 +10,23 @@ buildscript {
 }
 
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("com.google.dagger.hilt.android")
-    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
-    namespace = "com.example.vaccinationcentermapapp"
+    namespace = "com.example.presentation"
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "com.example.vaccinationcentermapapp"
         minSdk = 24
         targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -48,17 +45,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    dataBinding {
-        enable = true
-    }
 }
 
 dependencies {
 
     implementation(project(":domain"))
-    implementation(project(":data"))
-    implementation(project(":presentation"))
     implementation(project(":common"))
 
     implementation(Dependency.KTX.CORE)
