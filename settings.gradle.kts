@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "VaccinationCenterMapApp"
-include ':app'
+include(":app")
