@@ -12,6 +12,6 @@ interface VaccinationCenterAPI {
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
         @Query("serviceKey") serviceKey: String = SERVICE_KEY
-    ): VaccinationCenterResponse
+    ): List<VaccinationCenterResponse>
 
 }
