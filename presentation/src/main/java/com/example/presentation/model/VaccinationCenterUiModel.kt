@@ -1,6 +1,6 @@
-package com.example.domain.entity
+package com.example.presentation.model
 
-data class VaccinationCenterEntityModel (
+data class VaccinationCenterUiModel(
     val address: String?,
     val centerName: String?,
     val centerType: String?,
