@@ -1,14 +1,15 @@
 package com.example.data.mapper
 
 import com.example.common.Mapper
+import com.example.data.model.Data
 import com.example.data.model.VaccinationCenterResponse
 import com.example.domain.entity.VaccinationCenterEntityModel
 import javax.inject.Inject
 
 class VaccinationCenterDataDomainMapper @Inject constructor() :
-    Mapper<VaccinationCenterResponse, VaccinationCenterEntityModel> {
+    Mapper<Data, VaccinationCenterEntityModel> {
 
-    override fun from(i: VaccinationCenterResponse?): VaccinationCenterEntityModel {
+    override fun from(i: Data?): VaccinationCenterEntityModel {
         return VaccinationCenterEntityModel(
             address = i?.address,
             centerName = i?.centerName,
@@ -27,8 +28,8 @@ class VaccinationCenterDataDomainMapper @Inject constructor() :
         )
     }
 
-    override fun to(o: VaccinationCenterEntityModel?): VaccinationCenterResponse {
-        return VaccinationCenterResponse(
+    override fun to(o: VaccinationCenterEntityModel?): Data {
+        return Data(
             address = o?.address,
             centerName = o?.centerName,
             centerType = o?.centerType,

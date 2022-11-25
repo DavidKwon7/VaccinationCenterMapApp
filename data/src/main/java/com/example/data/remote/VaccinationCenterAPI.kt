@@ -7,11 +7,11 @@ import retrofit2.http.Query
 
 interface VaccinationCenterAPI {
 
-    @GET("/15077586/v1/centers")
+    @GET("15077586/v1/centers")
     suspend fun getVaccinationCenter(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
         @Query("serviceKey") serviceKey: String = SERVICE_KEY
-    ): List<VaccinationCenterResponse>
+    ): VaccinationCenterResponse
 
 }

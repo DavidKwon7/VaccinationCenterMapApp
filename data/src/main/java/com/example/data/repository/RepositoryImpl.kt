@@ -1,6 +1,7 @@
 package com.example.data.repository
 
 import com.example.common.Mapper
+import com.example.data.model.Data
 import com.example.data.model.VaccinationCenterResponse
 import com.example.data.source.RemoteDataSource
 import com.example.domain.entity.VaccinationCenterEntityModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val vaccinationCenterMapper: Mapper<VaccinationCenterResponse, VaccinationCenterEntityModel>
+    private val vaccinationCenterMapper: Mapper<Data, VaccinationCenterEntityModel>
 ) : Repository {
     override suspend fun getVaccinationCenter(): Flow<List<VaccinationCenterEntityModel>> {
         return flow {
