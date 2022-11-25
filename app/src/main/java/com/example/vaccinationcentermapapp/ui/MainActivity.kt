@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import com.example.presentation.vm.SplashState
 import com.example.presentation.vm.SplashViewModel
 import com.example.vaccinationcentermapapp.R

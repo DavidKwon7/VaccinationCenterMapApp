@@ -9,11 +9,17 @@
         android:id="@+id/splashFragment"
         android:name="com.example.vaccinationcentermapapp.ui.splash.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" />
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.vaccinationcentermapapp.MapFragment"
+        android:name="com.example.vaccinationcentermapapp.ui.map.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+
+    </fragment>
 </navigation>

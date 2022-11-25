@@ -15,4 +15,4 @@ data class VaccinationCenterUiModel(
     val sigungu: String?,
     val updatedAt: String?,
     val zipCode: String?
-)
+) : java.io.Serializable
