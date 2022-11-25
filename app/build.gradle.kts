@@ -104,4 +104,7 @@ dependencies {
 
     implementation(Dependency.Nav.NAV_UI)
     implementation(Dependency.Nav.NAV_FRAGMENT)
+
+    implementation("com.naver.maps:map-sdk:3.16.0")
+
 }

@@ -57,6 +57,7 @@ class MapFragment : Fragment() {
                             state.data.forEach {
                                 binding.vaccinationCenterModel = it
                             }
+                            Log.d("Map Test", "observeData: ${state.data}")
                         }
                         is MapState.Failed -> {
 
