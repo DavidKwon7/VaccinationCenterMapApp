@@ -12,8 +12,8 @@ class GetVaccinationCenterUseCase @Inject constructor(
     private val repository: Repository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun invoke(): Flow<List<VaccinationCenterEntityModel>> {
-        return repository.getVaccinationCenter()
+    suspend fun invoke(page: Int): Flow<List<VaccinationCenterEntityModel>> {
+        return repository.getVaccinationCenter(page)
             .flowOn(dispatcher)
     }
 }

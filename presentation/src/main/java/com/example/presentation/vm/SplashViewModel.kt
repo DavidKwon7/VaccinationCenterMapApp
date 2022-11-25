@@ -20,10 +20,10 @@ class SplashViewModel @Inject constructor(
     private var _getVaccinationCenter = MutableStateFlow<SplashState>(SplashState.Loading)
     val getVaccinationCenter: StateFlow<SplashState> get() = _getVaccinationCenter
 
-    fun getVaccinationCenter() =
+    fun getVaccinationCenter(page: Int) =
         viewModelScope.launch {
             _getVaccinationCenter.value = SplashState.Loading
-            getVaccinationCenterUseCase.invoke()
+            getVaccinationCenterUseCase.invoke(page)
                 .catch { e ->
                     _getVaccinationCenter.value = SplashState.Failed(e)
                 }.collect{ vaccinationCenter ->

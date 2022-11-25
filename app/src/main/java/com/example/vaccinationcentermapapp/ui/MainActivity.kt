@@ -20,12 +20,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getData()
+        //getData()
         observeData()
+        for (i: Int in 1..10) {
+            getData(i)
+        }
     }
 
-    private fun getData() {
-        splashViewModel.getVaccinationCenter()
+    private fun getData(page:Int) {
+        splashViewModel.getVaccinationCenter(page)
     }
 
     private fun observeData() {

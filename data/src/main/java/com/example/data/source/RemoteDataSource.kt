@@ -5,5 +5,5 @@ import com.example.data.model.VaccinationCenterResponse
 
 interface RemoteDataSource {
 
-    suspend fun getVaccinationCenter(): List<Data>?
+    suspend fun getVaccinationCenter(page: Int): List<Data>?
 }

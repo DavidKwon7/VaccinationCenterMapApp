@@ -17,8 +17,12 @@ import dagger.hilt.components.SingletonComponent
 abstract class MapperModule {
 
     @Binds
-    abstract fun bindsVaccinationCenterDataDomainMapper(mapper: VaccinationCenterDataDomainMapper): Mapper<Data, VaccinationCenterEntityModel>
+    abstract fun bindsVaccinationCenterDataDomainMapper(
+        mapper: VaccinationCenterDataDomainMapper
+    ): Mapper<Data, VaccinationCenterEntityModel>
 
     @Binds
-    abstract fun bindsVaccinationCenterUiDomainMapper(mapper: VaccinationCenterUiDomainMapper): Mapper<VaccinationCenterUiModel, VaccinationCenterEntityModel>
+    abstract fun bindsVaccinationCenterUiDomainMapper(
+        mapper: VaccinationCenterUiDomainMapper
+    ): Mapper<VaccinationCenterUiModel, VaccinationCenterEntityModel>
 }

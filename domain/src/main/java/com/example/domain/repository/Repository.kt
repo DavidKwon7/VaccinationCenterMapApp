@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    suspend fun getVaccinationCenter(): Flow<List<VaccinationCenterEntityModel>>
+    suspend fun getVaccinationCenter(page: Int): Flow<List<VaccinationCenterEntityModel>>
 }

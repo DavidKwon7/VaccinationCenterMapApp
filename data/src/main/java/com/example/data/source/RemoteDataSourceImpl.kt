@@ -12,9 +12,9 @@ class RemoteDataSourceImpl @Inject constructor(
     private val vaccinationCenterAPI: VaccinationCenterAPI
 ) : RemoteDataSource {
 
-    override suspend fun getVaccinationCenter(): List<Data>? {
+    override suspend fun getVaccinationCenter(page: Int): List<Data>? {
         val response =  vaccinationCenterAPI.getVaccinationCenter(
-            START_PAGE,
+            page,
             PER_PAGE
         )
         return response.data
