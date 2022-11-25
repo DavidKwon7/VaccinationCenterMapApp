@@ -1,6 +1,7 @@
 package com.example.vaccinationcentermapapp.ui.splash
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
+import com.example.presentation.model.VaccinationCenterUiModel
 import com.example.presentation.vm.SplashState
 import com.example.presentation.vm.SplashViewModel
 import com.example.vaccinationcentermapapp.R
@@ -60,7 +62,9 @@ class SplashFragment : Fragment() {
                         is SplashState.Success -> {
                             val data = state.data
                             binding.tv.text = data.toString()
-
+                            splashViewModel.insertVaccinationCenter(data)
+                            val k = splashViewModel.insertVaccinationCenter(data)
+                            Log.d("TAG", "observeData: $k")
                         }
                         is SplashState.Failed -> {
 
@@ -73,6 +77,7 @@ class SplashFragment : Fragment() {
 
     private fun moveToMap() {
         binding.btn.setOnClickListener {
+            //splashViewModel.insertVaccinationCenter()
             val navController = Navigation.findNavController(it)
             navController.navigate(
                 R.id.action_splashFragment_to_mapFragment

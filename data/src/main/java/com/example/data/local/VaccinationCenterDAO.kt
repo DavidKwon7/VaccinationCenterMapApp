@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 interface VaccinationCenterDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertVaccinationCenter(data: Data)
+    suspend fun insertVaccinationCenter(data: List<Data>)
 
     @Query("SELECT * FROM vaccinationCenterData")
-    fun getAllVaccinationCenter(): Flow<List<Data>>
+    fun getAllVaccinationCenter(): List<Data>
 
 }
