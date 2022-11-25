@@ -7,5 +7,6 @@ class Constants {
         const val BASE_URL = "https://api.odcloud.kr/api/"
         const val START_PAGE = 1
         const val PER_PAGE = 10
+        const val DATABASE_NAME = "vaccinationCenterDb"
     }
 }
