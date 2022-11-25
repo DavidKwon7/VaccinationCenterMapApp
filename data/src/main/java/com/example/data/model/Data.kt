@@ -1,8 +1,12 @@
 package com.example.data.model
 
 
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
+@Entity(
+    tableName = "vaccinationCenterData"
+)
 data class Data(
     @SerializedName("address")
     val address: String?,
