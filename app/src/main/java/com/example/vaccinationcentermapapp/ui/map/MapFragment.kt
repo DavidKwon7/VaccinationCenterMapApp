@@ -30,7 +30,6 @@ import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-// todo 1 마커 여러개 띄우기(리스트를 만들어 데이터 저장해줘야 할듯) -> 마커 관련 다양한 설정 custom
 // todo 2  lifeCycle - mapView 수정
 
 
@@ -61,19 +60,12 @@ class MapFragment : Fragment() {
         observeData()
 
         mapView = binding.mapView
-        mapView?.onCreate(savedInstanceState)   // why?
+        mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(callback)
 
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mapView?.onSaveInstanceState(outState)   // why?
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView?.onLowMemory()
+        binding.fbLocation.setOnClickListener {
+            Toast.makeText(requireContext(), "현재 위치", Toast.LENGTH_SHORT).show()
+        }
     }
 
     // onMapReady에서 마커 실행해야 보임!!
@@ -82,32 +74,11 @@ class MapFragment : Fragment() {
             this@MapFragment.naverMap = naverMap
 
             crateMarker()
-
-            /*val infoWindow = InfoWindow()
-            naverMap.setOnMapClickListener { pointF, latLng ->
-                Toast.makeText(requireContext(), "${latLng.latitude}, ${latLng.longitude}", Toast.LENGTH_SHORT).show()
-                infoWindow.close()
-            }*/
-
-
-            /*// 클릭 이벤트 -> 이 방법을 쓰면 마커 클릭이 아니라 맵 클릭이 되어버림.. (수정 필요)
-            naverMap.setOnMapClickListener { pointF, latLng ->
-                Toast.makeText(requireContext(), "${latLng.latitude}, ${latLng.longitude}", Toast.LENGTH_SHORT).show()
-
-                // 마커 클릭 시 화면 이동
-                val cameraUpdate = CameraUpdate.scrollTo(latLng)
-                naverMap.moveCamera(cameraUpdate)
-                naverMap.maxZoom = 18.0
-                naverMap.minZoom = 5.0
-
-            }*/
-
         }
     }
 
     private fun crateMarker() {
         val markers = mutableListOf<Marker>()
-        val locationOverlay = naverMap?.locationOverlay
 
         val infoWindow = InfoWindow()
 
@@ -115,58 +86,36 @@ class MapFragment : Fragment() {
             val location = LatLng(centerData.lat!!.toDouble(), centerData.lng!!.toDouble())
             val cameraUpdate = CameraUpdate.scrollTo(location)
 
-            /*val infoWindow = InfoWindow()
-            infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-                override fun getText(p0: InfoWindow): CharSequence {
-                    return "${it.centerName}"
-                    //infoWindow.marker?.tag as CharSequence? ?: "${it.centerName}"
-                }
-            }*/
             infoWindow.map = null
 
             markers += Marker().apply {
                 position = location
-
                 if (centerData.centerType == "중앙/권역") iconTintColor = Color.YELLOW
                 if (centerData.centerType == "지역") iconTintColor = Color.BLUE
 
-
                 naverMap?.setOnMapClickListener { pointF, latLng ->
-                    Toast.makeText(requireContext(), "${latLng.latitude}", Toast.LENGTH_SHORT)
-                        .show()
                     infoWindow.close()
                 }
-
-
-
 
                 setOnClickListener {
                     naverMap?.moveCamera(cameraUpdate)
 
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                         override fun getText(p0: InfoWindow): CharSequence {
-
                             return " 센터명: ${centerData.centerName} " +
                                     "\n 장소: ${centerData.facilityName} " +
                                     "\n 주소지: ${centerData.address}, " +
                                     "\n 전화번호: ${centerData.phoneNumber}, " +
                                     "\n 생성일: ${centerData.createdAt}"
-
-
-                            //infoWindow.marker?.tag as CharSequence? ?: "${it.centerName}"
                         }
                     }
-
                     val selectedMarker = it as Marker
-
                     if (selectedMarker.infoWindow == null) {
                         infoWindow.open(this)
                     } else {
                         infoWindow.close()
                     }
-
                     true
-
                 }
             }
 
@@ -208,6 +157,42 @@ class MapFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView?.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView?.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView?.onPause()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)   // why?
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView?.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mapView?.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView?.onLowMemory()
     }
 }
 

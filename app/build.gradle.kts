@@ -106,6 +106,11 @@ dependencies {
     implementation(Dependency.Nav.NAV_FRAGMENT)
 
     implementation("com.naver.maps:map-sdk:3.16.0")
+    // FusedLocationSource
+    implementation("com.google.android.gms:play-services-location:16.0.0")
+
+    implementation ("io.github.ParkSangGwon:tedpermission-coroutine:3.3.0")
+    implementation ("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
 
     implementation("com.sothree.slidinguppanel:library:3.4.0")
 
