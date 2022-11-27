@@ -114,9 +114,12 @@ class MapFragment : Fragment() {
                         //infoWindow.marker?.tag as CharSequence? ?: ""
                     }
                 }
+                val cameraUpdate = CameraUpdate.scrollTo(location)
+
 
                 setOnClickListener {
                     infoWindow.open(this)
+                    naverMap?.moveCamera(cameraUpdate)
                     true
                 }
                 infoWindow.close()
