@@ -23,6 +23,7 @@ import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -89,6 +90,7 @@ class MapFragment : Fragment() {
                 naverMap.moveCamera(cameraUpdate)
                 naverMap.maxZoom = 18.0
                 naverMap.minZoom = 5.0
+
             }
         }
     }
@@ -105,6 +107,15 @@ class MapFragment : Fragment() {
 
             markers.forEach { marker ->
                 marker.map = naverMap
+
+                val infoWindow = InfoWindow()
+                infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
+                    override fun getText(p0: InfoWindow): CharSequence {
+                        return "정보창 내용 "
+                    }
+                }
+                infoWindow.open(marker)
+
             }
         }
     }
