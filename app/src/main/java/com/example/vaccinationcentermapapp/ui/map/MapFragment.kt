@@ -1,6 +1,8 @@
 package com.example.vaccinationcentermapapp.ui.map
 
+import android.graphics.Color
 import android.os.Bundle
+import android.provider.CalendarContract.Colors
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -41,7 +43,8 @@ class MapFragment : Fragment() {
     private var naverMap: NaverMap? = null
     private var mapView: MapView? = null
 
-    private lateinit var markerData: List<VaccinationCenterUiModel> // 추후에 삭제 !
+    private lateinit var markerData: List<VaccinationCenterUiModel>
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +84,7 @@ class MapFragment : Fragment() {
 
             crateMarker()
 
-            // 클릭 이벤트
+            /*// 클릭 이벤트 -> 이 방법을 쓰면 마커 클릭이 아니라 맵 클릭이 되어버림.. (수정 필요)
             naverMap.setOnMapClickListener { pointF, latLng ->
                 Toast.makeText(requireContext(), "${latLng.latitude}, ${latLng.longitude}", Toast.LENGTH_SHORT).show()
 
@@ -91,7 +94,7 @@ class MapFragment : Fragment() {
                 naverMap.maxZoom = 18.0
                 naverMap.minZoom = 5.0
 
-            }
+            }*/
         }
     }
 
@@ -103,18 +106,24 @@ class MapFragment : Fragment() {
             val location = LatLng(it.lat!!.toDouble(), it.lng!!.toDouble())
             markers += Marker().apply {
                 position = location
-            }
-
-            markers.forEach { marker ->
-                marker.map = naverMap
 
                 val infoWindow = InfoWindow()
                 infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                     override fun getText(p0: InfoWindow): CharSequence {
-                        return "정보창 내용 "
+                        return "${it.centerName}"
+                        //infoWindow.marker?.tag as CharSequence? ?: ""
                     }
                 }
-                infoWindow.open(marker)
+
+                setOnClickListener {
+                    infoWindow.open(this)
+                    true
+                }
+                infoWindow.close()
+            }
+
+            markers.forEach { marker ->
+                marker.map = naverMap
 
             }
         }
