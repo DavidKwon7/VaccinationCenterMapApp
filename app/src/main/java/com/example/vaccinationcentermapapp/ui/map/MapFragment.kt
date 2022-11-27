@@ -12,12 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.presentation.model.VaccinationCenterUiModel
 import com.example.presentation.vm.MapState
 import com.example.presentation.vm.MapViewModel
 import com.example.vaccinationcentermapapp.R
 import com.example.vaccinationcentermapapp.databinding.FragmentMapBinding
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -59,7 +61,6 @@ class MapFragment : Fragment() {
         mapView?.onCreate(savedInstanceState)   // why?
         mapView?.getMapAsync(callback)
 
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -82,17 +83,26 @@ class MapFragment : Fragment() {
             // 클릭 이벤트
             naverMap.setOnMapClickListener { pointF, latLng ->
                 Toast.makeText(requireContext(), "${latLng.latitude}, ${latLng.longitude}", Toast.LENGTH_SHORT).show()
+
+                // 마커 클릭 시 화면 이동
+                val cameraUpdate = CameraUpdate.scrollTo(latLng)
+                naverMap.moveCamera(cameraUpdate)
+                naverMap.maxZoom = 18.0
+                naverMap.minZoom = 5.0
             }
         }
     }
 
     private fun crateMarker() {
         val markers = mutableListOf<Marker>()
-        markerData.forEach {
-            markers += Marker().apply {
-                position = LatLng(it.lat!!.toDouble(), it.lng!!.toDouble())
+        val locationOverlay = naverMap?.locationOverlay
 
+        markerData.forEach {
+            val location = LatLng(it.lat!!.toDouble(), it.lng!!.toDouble())
+            markers += Marker().apply {
+                position = location
             }
+
             markers.forEach { marker ->
                 marker.map = naverMap
             }

@@ -107,4 +107,6 @@ dependencies {
 
     implementation("com.naver.maps:map-sdk:3.16.0")
 
+    implementation("com.sothree.slidinguppanel:library:3.4.0")
+
 }
