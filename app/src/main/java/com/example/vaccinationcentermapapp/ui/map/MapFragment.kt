@@ -127,6 +127,9 @@ class MapFragment : Fragment() {
             markers += Marker().apply {
                 position = location
 
+                if (centerData.centerType == "중앙/권역") iconTintColor = Color.YELLOW
+                if (centerData.centerType == "지역") iconTintColor = Color.BLUE
+
 
                 naverMap?.setOnMapClickListener { pointF, latLng ->
                     Toast.makeText(requireContext(), "${latLng.latitude}", Toast.LENGTH_SHORT)
@@ -143,14 +146,25 @@ class MapFragment : Fragment() {
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                         override fun getText(p0: InfoWindow): CharSequence {
 
-                            return " 센터명: ${centerData.centerName} \n 장소: ${centerData.facilityName} \n 주소지: ${centerData.address}, \n 전화번호: ${centerData.phoneNumber}, \n 생성일: ${centerData.createdAt}"
+                            return " 센터명: ${centerData.centerName} " +
+                                    "\n 장소: ${centerData.facilityName} " +
+                                    "\n 주소지: ${centerData.address}, " +
+                                    "\n 전화번호: ${centerData.phoneNumber}, " +
+                                    "\n 생성일: ${centerData.createdAt}"
 
 
                             //infoWindow.marker?.tag as CharSequence? ?: "${it.centerName}"
                         }
                     }
 
-                    infoWindow.open(this)
+                    val selectedMarker = it as Marker
+
+                    if (selectedMarker.infoWindow == null) {
+                        infoWindow.open(this)
+                    } else {
+                        infoWindow.close()
+                    }
+
                     true
 
                 }
