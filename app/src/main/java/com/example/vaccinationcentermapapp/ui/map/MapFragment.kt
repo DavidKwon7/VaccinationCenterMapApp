@@ -65,10 +65,6 @@ class MapFragment : Fragment() {
 
         locationSource =
             FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-
-        binding.fbLocation.setOnClickListener {
-            Toast.makeText(requireContext(), "현재 위치", Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -95,6 +91,12 @@ class MapFragment : Fragment() {
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
             crateMarker()
+
+            binding.fbLocation.setOnClickListener {
+                Toast.makeText(requireContext(), "현재 위치", Toast.LENGTH_SHORT).show()
+                //naverMap.locationSource = locationSource
+                naverMap.locationTrackingMode = LocationTrackingMode.Follow
+            }
         }
     }
 
