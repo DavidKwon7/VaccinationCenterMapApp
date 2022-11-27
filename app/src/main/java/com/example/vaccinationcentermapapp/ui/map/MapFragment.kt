@@ -45,7 +45,6 @@ class MapFragment : Fragment() {
 
     private lateinit var markerData: List<VaccinationCenterUiModel>
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -84,6 +83,13 @@ class MapFragment : Fragment() {
 
             crateMarker()
 
+            /*val infoWindow = InfoWindow()
+            naverMap.setOnMapClickListener { pointF, latLng ->
+                Toast.makeText(requireContext(), "${latLng.latitude}, ${latLng.longitude}", Toast.LENGTH_SHORT).show()
+                infoWindow.close()
+            }*/
+
+
             /*// 클릭 이벤트 -> 이 방법을 쓰면 마커 클릭이 아니라 맵 클릭이 되어버림.. (수정 필요)
             naverMap.setOnMapClickListener { pointF, latLng ->
                 Toast.makeText(requireContext(), "${latLng.latitude}, ${latLng.longitude}", Toast.LENGTH_SHORT).show()
@@ -95,42 +101,63 @@ class MapFragment : Fragment() {
                 naverMap.minZoom = 5.0
 
             }*/
+
         }
     }
 
     private fun crateMarker() {
         val markers = mutableListOf<Marker>()
         val locationOverlay = naverMap?.locationOverlay
+
         val infoWindow = InfoWindow()
 
-        infoWindow.close()
-
-        markerData.forEach {
-            val location = LatLng(it.lat!!.toDouble(), it.lng!!.toDouble())
+        markerData.forEach { centerData ->
+            val location = LatLng(centerData.lat!!.toDouble(), centerData.lng!!.toDouble())
             val cameraUpdate = CameraUpdate.scrollTo(location)
 
-
+            /*val infoWindow = InfoWindow()
+            infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
+                override fun getText(p0: InfoWindow): CharSequence {
+                    return "${it.centerName}"
+                    //infoWindow.marker?.tag as CharSequence? ?: "${it.centerName}"
+                }
+            }*/
+            infoWindow.map = null
 
             markers += Marker().apply {
                 position = location
 
-                infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-                    override fun getText(p0: InfoWindow): CharSequence {
-                        return "${it.centerName}"
-                        //infoWindow.marker?.tag as CharSequence? ?: ""
-                    }
+
+                naverMap?.setOnMapClickListener { pointF, latLng ->
+                    Toast.makeText(requireContext(), "${latLng.latitude}", Toast.LENGTH_SHORT)
+                        .show()
+                    infoWindow.close()
                 }
 
+
+
+
                 setOnClickListener {
-                    infoWindow.open(this)
                     naverMap?.moveCamera(cameraUpdate)
+
+                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
+                        override fun getText(p0: InfoWindow): CharSequence {
+
+                            return " 센터명: ${centerData.centerName} \n 장소: ${centerData.facilityName} \n 주소지: ${centerData.address}, \n 전화번호: ${centerData.phoneNumber}, \n 생성일: ${centerData.createdAt}"
+
+
+                            //infoWindow.marker?.tag as CharSequence? ?: "${it.centerName}"
+                        }
+                    }
+
+                    infoWindow.open(this)
                     true
+
                 }
             }
 
             markers.forEach { marker ->
                 marker.map = naverMap
-
             }
         }
     }
