@@ -101,28 +101,31 @@ class MapFragment : Fragment() {
     private fun crateMarker() {
         val markers = mutableListOf<Marker>()
         val locationOverlay = naverMap?.locationOverlay
+        val infoWindow = InfoWindow()
+
+        infoWindow.close()
 
         markerData.forEach {
             val location = LatLng(it.lat!!.toDouble(), it.lng!!.toDouble())
+            val cameraUpdate = CameraUpdate.scrollTo(location)
+
+
+
             markers += Marker().apply {
                 position = location
 
-                val infoWindow = InfoWindow()
                 infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                     override fun getText(p0: InfoWindow): CharSequence {
                         return "${it.centerName}"
                         //infoWindow.marker?.tag as CharSequence? ?: ""
                     }
                 }
-                val cameraUpdate = CameraUpdate.scrollTo(location)
-
 
                 setOnClickListener {
                     infoWindow.open(this)
                     naverMap?.moveCamera(cameraUpdate)
                     true
                 }
-                infoWindow.close()
             }
 
             markers.forEach { marker ->
