@@ -1,6 +1,7 @@
 package com.example.vaccinationcentermapapp.ui.splash
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.presentation.model.VaccinationCenterUiModel
 import com.example.presentation.vm.SplashState
 import com.example.presentation.vm.SplashViewModel
 import com.example.vaccinationcentermapapp.R
 import com.example.vaccinationcentermapapp.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Timer
+import kotlin.concurrent.timer
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
@@ -42,10 +49,13 @@ class SplashFragment : Fragment() {
             getVaccinationCenter(i)
         }
 
+        showMain()
         observeData()
         moveToMap()
 
     }
+
+
 
     private fun getVaccinationCenter(page:Int) {
         splashViewModel.getVaccinationCenter(page)
@@ -65,6 +75,10 @@ class SplashFragment : Fragment() {
                             splashViewModel.insertVaccinationCenter(data)
                             val k = splashViewModel.insertVaccinationCenter(data)
                             Log.d("TAG", "observeData: $k")
+
+                            if (k.isActive) {
+
+                            }
                         }
                         is SplashState.Failed -> {
 
@@ -83,5 +97,11 @@ class SplashFragment : Fragment() {
                 R.id.action_splashFragment_to_mapFragment
             )
         }
+    }
+
+    private fun showMain() {
+        Handler().postDelayed({
+            findNavController().navigate(R.id.action_splashFragment_to_mapFragment)
+        }, 2000L)
     }
 }
