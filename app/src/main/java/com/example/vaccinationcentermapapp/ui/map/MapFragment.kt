@@ -21,12 +21,10 @@ import com.example.presentation.vm.MapViewModel
 import com.example.vaccinationcentermapapp.R
 import com.example.vaccinationcentermapapp.databinding.FragmentMapBinding
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -43,6 +41,8 @@ class MapFragment : Fragment() {
     private var mapView: MapView? = null
 
     private lateinit var markerData: List<VaccinationCenterUiModel>
+    private lateinit var locationSource: FusedLocationSource
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,15 +63,36 @@ class MapFragment : Fragment() {
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(callback)
 
+        locationSource =
+            FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
         binding.fbLocation.setOnClickListener {
             Toast.makeText(requireContext(), "현재 위치", Toast.LENGTH_SHORT).show()
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
+                grantResults)) {
+            if (!locationSource.isActivated) { // 권한 거부됨
+                naverMap?.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+
+
     // onMapReady에서 마커 실행해야 보임!!
     private val callback = object : OnMapReadyCallback {
         override fun onMapReady(naverMap: NaverMap) {
             this@MapFragment.naverMap = naverMap
+
+            naverMap.locationSource = locationSource
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
             crateMarker()
         }
@@ -193,6 +214,10 @@ class MapFragment : Fragment() {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView?.onLowMemory()
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 }
 
