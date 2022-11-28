@@ -168,7 +168,7 @@ class MapFragment : Fragment() {
                 mapViewModel.getVaccinationCenter.collect {state ->
                     when(state) {
                         is MapState.Loading -> {
-
+                            binding.pb.setVisibility(View.VISIBLE)
                         }
                         is MapState.Success -> {
                             state.data.forEach {
@@ -184,7 +184,7 @@ class MapFragment : Fragment() {
                             }
                         }
                         is MapState.Failed -> {
-
+                            state.message.printStackTrace()
                         }
                     }
                 }
