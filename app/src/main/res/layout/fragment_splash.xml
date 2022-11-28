@@ -33,7 +33,7 @@
             android:layout_height="112dp"
             android:text="@string/app_title"
             android:textAlignment="center"
-            android:textColor="#3A8647"
+            android:textColor="@color/main_color"
             android:textSize="40sp"
             app:layout_constraintTop_toBottomOf="@id/iv_hospital" />
 
@@ -43,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:progressTint="@color/main_color"
             android:indeterminate="false"
             android:max="100"
             android:padding="12dp"

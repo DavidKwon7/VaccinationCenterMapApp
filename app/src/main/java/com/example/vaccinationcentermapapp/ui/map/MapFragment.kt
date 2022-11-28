@@ -41,7 +41,6 @@ class MapFragment : Fragment(), PermissionListener {
     private lateinit var markerData: List<VaccinationCenterUiModel>
     private lateinit var locationSource: FusedLocationSource
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,11 +68,11 @@ class MapFragment : Fragment(), PermissionListener {
     private fun requestPermission() {
         TedPermission.create()
             .setPermissionListener(this)
-            .setRationaleMessage("위치 정보 제공이 필요한 서비스입니다.")
-            .setDeniedMessage("[설정] -> [권한]에서 권한 변경이 가능합니다.")
-            .setDeniedCloseButtonText("닫기")
-            .setGotoSettingButtonText("설정")
-            .setRationaleTitle("위치 정보")
+            .setRationaleMessage(getString(R.string.location_msg))
+            .setDeniedMessage(getString(R.string.change_permission))
+            .setDeniedCloseButtonText(getString(R.string.close))
+            .setGotoSettingButtonText(getString(R.string.setting))
+            .setRationaleTitle(getString(R.string.location_info))
             .setPermissions(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -91,7 +90,7 @@ class MapFragment : Fragment(), PermissionListener {
             crateMarker()
 
             binding.fbLocation.setOnClickListener {
-                Toast.makeText(requireContext(), "현재 위치로 이동", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.move_my_location), Toast.LENGTH_SHORT).show()
                 naverMap.locationTrackingMode = LocationTrackingMode.Follow
             }
         }
@@ -110,8 +109,8 @@ class MapFragment : Fragment(), PermissionListener {
 
             markers += Marker().apply {
                 position = location
-                if (centerData.centerType == "중앙/권역") iconTintColor = Color.YELLOW
-                if (centerData.centerType == "지역") iconTintColor = Color.BLUE
+                if (centerData.centerType == getString(R.string.center)) iconTintColor = Color.YELLOW
+                if (centerData.centerType == getString(R.string.local)) iconTintColor = Color.BLUE
 
                 naverMap?.setOnMapClickListener { _, _ ->
                     infoWindow.close()
@@ -225,10 +224,10 @@ class MapFragment : Fragment(), PermissionListener {
     }
 
     override fun onPermissionGranted() {
-        Toast.makeText(requireContext(), "위치 정보 제공이 완료되었습니다", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.success_get_location), Toast.LENGTH_SHORT).show()
     }
 
     override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-        Toast.makeText(requireContext(), "위치 정보 제공이 거부되었습니다", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.fail_get_location), Toast.LENGTH_SHORT).show()
     }
 }

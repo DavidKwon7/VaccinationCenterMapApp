@@ -4,4 +4,14 @@
     <string name="app_title">코로나19 예방접종센터 지도</string>
     <string name="image">image</string>
     <string name="movetomylocation">moveToMyLocation</string>
+    <string name="move_my_location">현재 위치로 이동</string>
+    <string name="center">중앙/권역</string>
+    <string name="local">지역</string>
+    <string name="success_get_location">위치 정보 제공이 완료되었습니다</string>
+    <string name="fail_get_location">위치 정보 제공이 거부되었습니다</string>
+    <string name="change_permission"><![CDATA[[설정] -> [권한]에서 권한 변경이 가능합니다.]]></string>
+    <string name="location_msg">위치 정보 제공이 필요한 서비스입니다.</string>
+    <string name="close">닫기</string>
+    <string name="setting">설정</string>
+    <string name="location_info">위치 정보</string>
 </resources>
