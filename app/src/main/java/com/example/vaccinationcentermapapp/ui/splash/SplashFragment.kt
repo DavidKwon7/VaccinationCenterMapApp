@@ -21,6 +21,7 @@ import com.example.vaccinationcentermapapp.R
 import com.example.vaccinationcentermapapp.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -57,22 +58,22 @@ class SplashFragment : Fragment() {
                 splashViewModel.getVaccinationCenter.collect { state ->
                     when (state) {
                         is SplashState.Loading -> {
-
+                            binding.pb.setVisibility(View.VISIBLE)
+                            binding.pb.secondaryProgress = 80
                         }
 
                         is SplashState.Success -> {
-                            binding.pb.setVisibility(View.INVISIBLE)
-
                             val data = state.data
                             splashViewModel.insertVaccinationCenter(data)
 
-                            if (binding.pb.progress == binding.pb.max) {
+                            withTimeout(2000L) {
+                                repeat(5) {
+                                    binding.pb.incrementProgressBy(4)
+                                }
                                 startDetailFragment()
-                            } else {
-                                binding.pb.incrementProgressBy(20)
                             }
-
                         }
+
                         is SplashState.Failed -> {
                             Timber.e("에러 발생: ${state.message}")
                             state.message.printStackTrace()
