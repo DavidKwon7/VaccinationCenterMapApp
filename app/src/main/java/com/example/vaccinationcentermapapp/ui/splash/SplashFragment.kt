@@ -47,15 +47,15 @@ class SplashFragment : Fragment() {
         observeData()
     }
 
-    private fun getVaccinationCenter(page:Int) {
+    private fun getVaccinationCenter(page: Int) {
         splashViewModel.getVaccinationCenter(page)
     }
 
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                splashViewModel.getVaccinationCenter.collect {state ->
-                    when(state) {
+                splashViewModel.getVaccinationCenter.collect { state ->
+                    when (state) {
                         is SplashState.Loading -> {
 
                         }

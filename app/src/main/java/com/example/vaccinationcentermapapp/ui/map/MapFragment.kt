@@ -1,5 +1,6 @@
 package com.example.vaccinationcentermapapp.ui.map
 
+import android.Manifest
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,8 @@ import com.example.presentation.vm.MapState
 import com.example.presentation.vm.MapViewModel
 import com.example.vaccinationcentermapapp.R
 import com.example.vaccinationcentermapapp.databinding.FragmentMapBinding
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
@@ -29,14 +32,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MapFragment : Fragment() {
+class MapFragment : Fragment(), PermissionListener {
 
     lateinit var binding: FragmentMapBinding
     private val mapViewModel: MapViewModel by viewModels()
-
     private var naverMap: NaverMap? = null
     private var mapView: MapView? = null
-
     private lateinit var markerData: List<VaccinationCenterUiModel>
     private lateinit var locationSource: FusedLocationSource
 
@@ -55,6 +56,7 @@ class MapFragment : Fragment() {
 
         getAllVaccinationCenter()
         observeData()
+        requestPermission()
 
         mapView = binding.mapView
         mapView?.onCreate(savedInstanceState)
@@ -64,22 +66,19 @@ class MapFragment : Fragment() {
             FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (locationSource.onRequestPermissionsResult(
-                requestCode, permissions,
-                grantResults
+    private fun requestPermission() {
+        TedPermission.create()
+            .setPermissionListener(this)
+            .setRationaleMessage("위치 정보 제공이 필요한 서비스입니다.")
+            .setDeniedMessage("[설정] -> [권한]에서 권한 변경이 가능합니다.")
+            .setDeniedCloseButtonText("닫기")
+            .setGotoSettingButtonText("설정")
+            .setRationaleTitle("위치 정보")
+            .setPermissions(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
-        ) {
-            if (!locationSource.isActivated) { // 권한 거부됨
-                naverMap?.locationTrackingMode = LocationTrackingMode.None
-            }
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            .check()
     }
 
     private val callback = object : OnMapReadyCallback {
@@ -223,5 +222,13 @@ class MapFragment : Fragment() {
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
+
+    override fun onPermissionGranted() {
+        Toast.makeText(requireContext(), "위치 정보 제공이 완료되었습니다", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+        Toast.makeText(requireContext(), "위치 정보 제공이 거부되었습니다", Toast.LENGTH_SHORT).show()
     }
 }
