@@ -25,6 +25,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -118,10 +119,19 @@ class MapFragment : Fragment() {
 
                 naverMap?.setOnMapClickListener { pointF, latLng ->
                     infoWindow.close()
+                    if (binding.slideFrame.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                        binding.slideFrame.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED)
+                    }
                 }
 
                 setOnClickListener {
                     naverMap?.moveCamera(cameraUpdate)
+                    binding.vaccinationCenterModel = centerData
+
+                    if (binding.slideFrame.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                        binding.slideFrame.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED)
+                    }
+
 
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                         override fun getText(p0: InfoWindow): CharSequence {
