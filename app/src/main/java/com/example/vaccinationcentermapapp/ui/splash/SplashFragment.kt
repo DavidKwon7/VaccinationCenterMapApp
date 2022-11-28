@@ -57,11 +57,8 @@ class SplashFragment : Fragment() {
 
         //showMain()
         observeData()
-        //moveToMap()
-
 
     }
-
 
     private fun getVaccinationCenter(page:Int) {
         splashViewModel.getVaccinationCenter(page)
@@ -77,13 +74,10 @@ class SplashFragment : Fragment() {
                             //binding.pb.setProgress(80, true)
                         }
                         is SplashState.Success -> {
-                            //binding.pb.setVisibility(View.INVISIBLE)
+                            binding.pb.setVisibility(View.INVISIBLE)
 
                             val data = state.data
-                            binding.tv.text = data.toString()
                             splashViewModel.insertVaccinationCenter(data)
-                            val k = splashViewModel.insertVaccinationCenter(data)
-                            Log.d("TAG", "observeData: $k")
 
                             if (binding.pb.progress == binding.pb.max) {
                                 startDetailFragment()
@@ -102,15 +96,7 @@ class SplashFragment : Fragment() {
         }
     }
 
-    private fun moveToMap() {
-        binding.btn.setOnClickListener {
-            //splashViewModel.insertVaccinationCenter()
-            val navController = Navigation.findNavController(it)
-            navController.navigate(
-                R.id.action_splashFragment_to_mapFragment
-            )
-        }
-    }
+
 
     private fun showMain() {
         lifecycleScope.launch {

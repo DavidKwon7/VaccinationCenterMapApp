@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -94,7 +95,7 @@ class MapFragment : Fragment() {
             crateMarker()
 
             binding.fbLocation.setOnClickListener {
-                Toast.makeText(requireContext(), "현재 위치", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "현재 위치로 이동", Toast.LENGTH_SHORT).show()
                 //naverMap.locationSource = locationSource
                 naverMap.locationTrackingMode = LocationTrackingMode.Follow
             }
@@ -168,9 +169,10 @@ class MapFragment : Fragment() {
                 mapViewModel.getVaccinationCenter.collect {state ->
                     when(state) {
                         is MapState.Loading -> {
-                            binding.pb.setVisibility(View.VISIBLE)
+                            binding.pb.isVisible = true
                         }
                         is MapState.Success -> {
+                            binding.pb.isVisible = false
                             state.data.forEach {
                                 binding.vaccinationCenterModel = it
 
