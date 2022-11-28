@@ -15,6 +15,7 @@ class RepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val vaccinationCenterMapper: Mapper<Data, VaccinationCenterEntityModel>
 ) : Repository {
+
     override suspend fun getVaccinationCenter(page: Int): Flow<List<VaccinationCenterEntityModel>> {
         return flow {
             val data = remoteDataSource.getVaccinationCenter(page)

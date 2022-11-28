@@ -78,4 +78,18 @@ object Dependency {
     object Paging {
         const val PAGING = "androidx.paging:paging-runtime:3.0.1"
     }
+
+    object NaverMap {
+        const val MAP = "com.naver.maps:map-sdk:3.16.0"
+        const val LOCATION = "com.google.android.gms:play-services-location:16.0.0"
+    }
+
+    object TedPermission {
+        const val NORMAL = "io.github.ParkSangGwon:tedpermission-normal:3.3.0"
+        const val COROUTINE = "io.github.ParkSangGwon:tedpermission-coroutine:3.3.0"
+    }
+
+    object SlidingUpPanel {
+        const val PANEL = "com.sothree.slidinguppanel:library:3.4.0"
+    }
 }

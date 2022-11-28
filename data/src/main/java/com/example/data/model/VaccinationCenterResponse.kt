@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName
 
 data class VaccinationCenterResponse(
 
-
-
     @SerializedName("currentCount")
     val currentCount: Int?,
     @SerializedName("data")

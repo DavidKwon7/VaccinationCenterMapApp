@@ -4,13 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.Mapper
 import com.example.domain.entity.VaccinationCenterEntityModel
-import com.example.domain.usecase.GetAllVaccinationCenterUseCase
 import com.example.domain.usecase.GetVaccinationCenterUseCase
 import com.example.domain.usecase.InsertVaccinationCenterUseCase
 import com.example.presentation.model.VaccinationCenterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,19 +34,16 @@ class SplashViewModel @Inject constructor(
             getVaccinationCenterUseCase.invoke(page)
                 .catch { e ->
                     _getVaccinationCenter.value = SplashState.Failed(e)
-                }.collect{ vaccinationCenter ->
-                    _getVaccinationCenter.value = SplashState.Success(vaccinationCenterMapper.toList(vaccinationCenter))
+                }.collect { vaccinationCenter ->
+                    _getVaccinationCenter.value =
+                        SplashState.Success(vaccinationCenterMapper.toList(vaccinationCenter))
                 }
         }
 
-    // annotation 붙이기
     fun insertVaccinationCenter(data: List<VaccinationCenterUiModel>) =
         viewModelScope.launch(Dispatchers.IO) {
-            //_insertFlow.value = SplashState.Loading
             insetVaccinationCenterUseCase.invoke(vaccinationCenterMapper.fromList(data))
         }
-
-
 }
 
 sealed class SplashState() {

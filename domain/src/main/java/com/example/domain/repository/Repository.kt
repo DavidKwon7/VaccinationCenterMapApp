@@ -10,4 +10,5 @@ interface Repository {
     suspend fun insertVaccinationCenter(data: List<VaccinationCenterEntityModel>)
 
     fun getAllVaccinationCenter(): Flow<List<VaccinationCenterEntityModel>>
+
 }

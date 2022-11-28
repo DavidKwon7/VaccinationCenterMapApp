@@ -1,24 +1,28 @@
 package com.example.vaccinationcentermapapp.ui.splash
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.Navigation
-import com.example.presentation.model.VaccinationCenterUiModel
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
+import androidx.navigation.fragment.findNavController
 import com.example.presentation.vm.SplashState
 import com.example.presentation.vm.SplashViewModel
 import com.example.vaccinationcentermapapp.R
 import com.example.vaccinationcentermapapp.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
@@ -29,7 +33,7 @@ class SplashFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
         val view = binding.root
         return view
@@ -41,33 +45,38 @@ class SplashFragment : Fragment() {
         for (i: Int in 1..10) {
             getVaccinationCenter(i)
         }
-
         observeData()
-        moveToMap()
-
     }
 
-    private fun getVaccinationCenter(page:Int) {
+    private fun getVaccinationCenter(page: Int) {
         splashViewModel.getVaccinationCenter(page)
     }
 
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                splashViewModel.getVaccinationCenter.collect {state ->
-                    when(state) {
+                splashViewModel.getVaccinationCenter.collect { state ->
+                    when (state) {
                         is SplashState.Loading -> {
-
+                            binding.pb.setVisibility(View.VISIBLE)
+                            binding.pb.secondaryProgress = 80
                         }
+
                         is SplashState.Success -> {
                             val data = state.data
-                            binding.tv.text = data.toString()
                             splashViewModel.insertVaccinationCenter(data)
-                            val k = splashViewModel.insertVaccinationCenter(data)
-                            Log.d("TAG", "observeData: $k")
-                        }
-                        is SplashState.Failed -> {
 
+                            withTimeout(2000L) {
+                                repeat(5) {
+                                    binding.pb.incrementProgressBy(4)
+                                }
+                                startDetailFragment()
+                            }
+                        }
+
+                        is SplashState.Failed -> {
+                            Timber.e("에러 발생: ${state.message}")
+                            state.message.printStackTrace()
                         }
                     }
                 }
@@ -75,13 +84,21 @@ class SplashFragment : Fragment() {
         }
     }
 
-    private fun moveToMap() {
-        binding.btn.setOnClickListener {
-            //splashViewModel.insertVaccinationCenter()
-            val navController = Navigation.findNavController(it)
-            navController.navigate(
-                R.id.action_splashFragment_to_mapFragment
-            )
+    fun NavController.navigateSafe(
+        @IdRes resId: Int,
+        args: Bundle? = null,
+        navOptions: NavOptions? = null,
+        navExtras: Navigator.Extras? = null
+    ) {
+        val action = currentDestination?.getAction(resId) ?: graph.getAction(resId)
+
+        if (action != null && currentDestination?.id != action.destinationId) {
+            navigate(resId, args, navOptions, navExtras)
         }
+    }
+
+    private fun startDetailFragment() {
+        val action = SplashFragmentDirections.actionSplashFragmentToMapFragment()
+        findNavController().navigateSafe(action.actionId, action.arguments)
     }
 }

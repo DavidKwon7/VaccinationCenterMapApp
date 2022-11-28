@@ -1,10 +1,7 @@
 package com.example.data.source
 
-import android.util.Log
 import com.example.common.Constants.Companion.PER_PAGE
-import com.example.common.Constants.Companion.START_PAGE
 import com.example.data.model.Data
-import com.example.data.model.VaccinationCenterResponse
 import com.example.data.remote.VaccinationCenterAPI
 import javax.inject.Inject
 
@@ -13,7 +10,7 @@ class RemoteDataSourceImpl @Inject constructor(
 ) : RemoteDataSource {
 
     override suspend fun getVaccinationCenter(page: Int): List<Data>? {
-        val response =  vaccinationCenterAPI.getVaccinationCenter(
+        val response = vaccinationCenterAPI.getVaccinationCenter(
             page,
             PER_PAGE
         )

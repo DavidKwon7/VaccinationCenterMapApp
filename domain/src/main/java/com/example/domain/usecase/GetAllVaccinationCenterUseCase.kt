@@ -11,8 +11,8 @@ import javax.inject.Inject
 class GetAllVaccinationCenterUseCase @Inject constructor(
     private val repository: Repository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
-)  {
-    suspend fun invoke(): Flow<List<VaccinationCenterEntityModel>> {
+) {
+    fun invoke(): Flow<List<VaccinationCenterEntityModel>> {
         return repository.getAllVaccinationCenter()
             .flowOn(dispatcher)
     }

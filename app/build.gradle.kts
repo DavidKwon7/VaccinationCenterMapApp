@@ -104,4 +104,13 @@ dependencies {
 
     implementation(Dependency.Nav.NAV_UI)
     implementation(Dependency.Nav.NAV_FRAGMENT)
+
+    implementation(Dependency.NaverMap.MAP)
+    implementation(Dependency.NaverMap.LOCATION)
+
+    implementation (Dependency.TedPermission.NORMAL)
+    implementation (Dependency.TedPermission.COROUTINE)
+
+    implementation(Dependency.SlidingUpPanel.PANEL)
+
 }
