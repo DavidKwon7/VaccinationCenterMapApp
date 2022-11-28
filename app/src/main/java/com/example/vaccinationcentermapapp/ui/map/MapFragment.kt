@@ -120,12 +120,10 @@ class MapFragment : Fragment(), PermissionListener {
                 }
 
                 setOnClickListener {
+                    clickSlidingUpPanel()
+
                     naverMap?.moveCamera(cameraUpdate)
                     binding.vaccinationCenterModel = centerData
-
-                    if (binding.slideFrame.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                        binding.slideFrame.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED)
-                    }
 
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                         override fun getText(p0: InfoWindow): CharSequence {
@@ -149,6 +147,16 @@ class MapFragment : Fragment(), PermissionListener {
             markers.forEach { marker ->
                 marker.map = naverMap
             }
+        }
+    }
+
+    private fun clickSlidingUpPanel() {
+        if (binding.slideFrame.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+            binding.slideFrame.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED)
+        }
+
+        if (binding.slideFrame.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            binding.slideFrame.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED)
         }
     }
 
