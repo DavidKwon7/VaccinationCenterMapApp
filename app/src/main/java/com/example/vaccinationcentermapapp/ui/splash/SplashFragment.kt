@@ -28,6 +28,7 @@ import com.example.vaccinationcentermapapp.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
+import java.util.Observable
 import java.util.Timer
 import kotlin.concurrent.timer
 
@@ -57,8 +58,8 @@ class SplashFragment : Fragment() {
         observeData()
         //moveToMap()
 
-    }
 
+    }
 
 
     private fun getVaccinationCenter(page:Int) {
@@ -71,17 +72,35 @@ class SplashFragment : Fragment() {
                 splashViewModel.getVaccinationCenter.collect {state ->
                     when(state) {
                         is SplashState.Loading -> {
-                            binding.pb.setVisibility(View.VISIBLE)
+                           // binding.pb.setVisibility(View.VISIBLE)
+                            //binding.pb.setProgress(80, true)
                         }
                         is SplashState.Success -> {
-                            binding.pb.setVisibility(View.INVISIBLE)
+                            //binding.pb.setVisibility(View.INVISIBLE)
 
                             val data = state.data
                             binding.tv.text = data.toString()
                             splashViewModel.insertVaccinationCenter(data)
                             val k = splashViewModel.insertVaccinationCenter(data)
                             Log.d("TAG", "observeData: $k")
-                            startDetailFragment()
+
+                            if (binding.pb.progress == binding.pb.max) {
+                                startDetailFragment()
+                            } else {
+                                binding.pb.incrementProgressBy(20)
+                            }
+
+                            //delay(2000L)
+
+                           /* if (k.isCompleted) {
+                                startDetailFragment()
+                            } else {
+                                binding.pb.setProgress(80, true)
+                                if (k.isCompleted) {
+                                    delay(200)
+                                    binding.pb.incrementProgressBy(5)
+                                }
+                            }*/
                         }
                         is SplashState.Failed -> {
 
