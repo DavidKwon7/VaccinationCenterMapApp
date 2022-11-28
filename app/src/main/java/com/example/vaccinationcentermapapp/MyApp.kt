@@ -14,7 +14,6 @@ class MyApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-
         Timber.d("MyApp Timber Test")
     }
 }

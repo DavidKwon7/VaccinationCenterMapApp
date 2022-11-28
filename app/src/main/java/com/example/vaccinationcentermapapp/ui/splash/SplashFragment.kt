@@ -1,14 +1,10 @@
 package com.example.vaccinationcentermapapp.ui.splash
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,21 +13,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
-import com.example.presentation.model.VaccinationCenterUiModel
 import com.example.presentation.vm.SplashState
 import com.example.presentation.vm.SplashViewModel
 import com.example.vaccinationcentermapapp.R
 import com.example.vaccinationcentermapapp.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.Observable
-import java.util.Timer
-import kotlin.concurrent.timer
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
@@ -42,7 +32,7 @@ class SplashFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
         val view = binding.root
         return view
@@ -54,10 +44,7 @@ class SplashFragment : Fragment() {
         for (i: Int in 1..10) {
             getVaccinationCenter(i)
         }
-
-        //showMain()
         observeData()
-
     }
 
     private fun getVaccinationCenter(page:Int) {
@@ -70,9 +57,9 @@ class SplashFragment : Fragment() {
                 splashViewModel.getVaccinationCenter.collect {state ->
                     when(state) {
                         is SplashState.Loading -> {
-                           // binding.pb.setVisibility(View.VISIBLE)
-                            //binding.pb.setProgress(80, true)
+
                         }
+
                         is SplashState.Success -> {
                             binding.pb.setVisibility(View.INVISIBLE)
 
@@ -87,7 +74,7 @@ class SplashFragment : Fragment() {
 
                         }
                         is SplashState.Failed -> {
-                            Log.e("SplashFragment", "에러 발생: ${state.message}")
+                            Timber.e("에러 발생: ${state.message}")
                             state.message.printStackTrace()
                         }
                     }
@@ -96,16 +83,6 @@ class SplashFragment : Fragment() {
         }
     }
 
-
-
-    private fun showMain() {
-        lifecycleScope.launch {
-            delay(2000L)
-            findNavController().navigate(R.id.action_splashFragment_to_mapFragment)
-        }
-    }
-
-    // nav test
     fun NavController.navigateSafe(
         @IdRes resId: Int,
         args: Bundle? = null,
@@ -119,11 +96,8 @@ class SplashFragment : Fragment() {
         }
     }
 
-    private fun startDetailFragment(
-        // roomCode: String, date: String
-    ) {
+    private fun startDetailFragment() {
         val action = SplashFragmentDirections.actionSplashFragmentToMapFragment()
         findNavController().navigateSafe(action.actionId, action.arguments)
     }
-
 }

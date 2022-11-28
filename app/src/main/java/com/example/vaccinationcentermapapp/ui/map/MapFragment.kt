@@ -2,20 +2,17 @@ package com.example.vaccinationcentermapapp.ui.map
 
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.CalendarContract.Colors
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.presentation.model.VaccinationCenterUiModel
 import com.example.presentation.vm.MapState
 import com.example.presentation.vm.MapViewModel
@@ -29,9 +26,7 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
-// todo 2  lifeCycle - mapView 수정
-
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MapFragment : Fragment() {
@@ -49,7 +44,7 @@ class MapFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
         val view = binding.root
         return view
@@ -69,11 +64,16 @@ class MapFragment : Fragment() {
             FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
-                grantResults)) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (locationSource.onRequestPermissionsResult(
+                requestCode, permissions,
+                grantResults
+            )
+        ) {
             if (!locationSource.isActivated) { // 권한 거부됨
                 naverMap?.locationTrackingMode = LocationTrackingMode.None
             }
@@ -82,9 +82,6 @@ class MapFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-
-
-    // onMapReady에서 마커 실행해야 보임!!
     private val callback = object : OnMapReadyCallback {
         override fun onMapReady(naverMap: NaverMap) {
             this@MapFragment.naverMap = naverMap
@@ -96,7 +93,6 @@ class MapFragment : Fragment() {
 
             binding.fbLocation.setOnClickListener {
                 Toast.makeText(requireContext(), "현재 위치로 이동", Toast.LENGTH_SHORT).show()
-                //naverMap.locationSource = locationSource
                 naverMap.locationTrackingMode = LocationTrackingMode.Follow
             }
         }
@@ -118,7 +114,7 @@ class MapFragment : Fragment() {
                 if (centerData.centerType == "중앙/권역") iconTintColor = Color.YELLOW
                 if (centerData.centerType == "지역") iconTintColor = Color.BLUE
 
-                naverMap?.setOnMapClickListener { pointF, latLng ->
+                naverMap?.setOnMapClickListener { _, _ ->
                     infoWindow.close()
                     if (binding.slideFrame.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                         binding.slideFrame.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED)
@@ -132,7 +128,6 @@ class MapFragment : Fragment() {
                     if (binding.slideFrame.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                         binding.slideFrame.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED)
                     }
-
 
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                         override fun getText(p0: InfoWindow): CharSequence {
@@ -166,26 +161,22 @@ class MapFragment : Fragment() {
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mapViewModel.getVaccinationCenter.collect {state ->
-                    when(state) {
+                mapViewModel.getVaccinationCenter.collect { state ->
+                    when (state) {
                         is MapState.Loading -> {
                             binding.pb.isVisible = true
                         }
+
                         is MapState.Success -> {
                             binding.pb.isVisible = false
                             state.data.forEach {
                                 binding.vaccinationCenterModel = it
-
-                            }
-                            Log.d("Map Test", "observeData: ${state.data}")
-
-                            state.data.forEach {
-                                Log.d("TAG1", "observeData: ${it.lng}")
-
                                 markerData = state.data
                             }
                         }
+
                         is MapState.Failed -> {
+                            Timber.e("에러 발생: ${state.message}")
                             state.message.printStackTrace()
                         }
                     }
@@ -212,7 +203,7 @@ class MapFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView?.onSaveInstanceState(outState)   // why?
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
@@ -234,4 +225,3 @@ class MapFragment : Fragment() {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 }
-

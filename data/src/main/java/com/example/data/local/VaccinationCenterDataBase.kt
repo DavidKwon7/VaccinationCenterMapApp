@@ -9,5 +9,7 @@ import com.example.data.model.Data
     version = 1
 )
 abstract class VaccinationCenterDataBase : RoomDatabase() {
+
     abstract fun getVaccinationCenter(): VaccinationCenterDAO
+
 }

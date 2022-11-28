@@ -7,7 +7,6 @@ import com.example.domain.entity.VaccinationCenterEntityModel
 import com.example.domain.usecase.GetAllVaccinationCenterUseCase
 import com.example.presentation.model.VaccinationCenterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -29,8 +28,9 @@ class MapViewModel @Inject constructor(
             getAllVaccinationCenterUseCase.invoke()
                 .catch { e ->
                     _getVaccinationCenter.value = MapState.Failed(e)
-                }.collect {vaccinationCenter ->
-                    _getVaccinationCenter.value = MapState.Success(vaccinationCenterMapper.toList(vaccinationCenter))
+                }.collect { vaccinationCenter ->
+                    _getVaccinationCenter.value =
+                        MapState.Success(vaccinationCenterMapper.toList(vaccinationCenter))
                 }
         }
 }
